@@ -12,7 +12,8 @@ namespace ApiEcommerce.Entities
     public class Order
     {
         public long Id { get; set; }
-        [BindNever] public ICollection<OrderItem> OrderItems { get; set; }
+        [BindNever] 
+        public ICollection<OrderItem> OrderItems { get; set; }
 
         [Required(ErrorMessage = "Please enter the address")]
 
