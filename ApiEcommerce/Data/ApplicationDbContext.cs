@@ -131,7 +131,7 @@ namespace ApiEcommerce.Data
                 entity.HasMany(o => o.OrderItems)
                     .WithOne(oi => oi.Order)
                     .HasForeignKey(o => o.OrderId).IsRequired()
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
                 
 
                 entity.HasOne(o => o.Address).WithMany((string)null)
@@ -148,7 +148,7 @@ namespace ApiEcommerce.Data
                 entity.HasOne(oi => oi.Order)
                     .WithMany(o => o.OrderItems)
                     .HasForeignKey(oi => oi.OrderId).IsRequired(true)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.NoAction);
             });
 
             
