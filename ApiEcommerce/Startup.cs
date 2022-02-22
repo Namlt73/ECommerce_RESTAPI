@@ -1,7 +1,14 @@
 using ApiEcommerce.Data;
+using ApiEcommerce.Entities;
+using ApiEcommerce.Helper;
+using ApiEcommerce.Services.Implements;
+using ApiEcommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +38,11 @@ namespace ApiEcommerce
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"))
             );
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddJwtAuthentication(Configuration);
+            services.AddTransient<IConfigurationService, ConfigurationService>();
+            services.AddTransient<IUserService, UserService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
