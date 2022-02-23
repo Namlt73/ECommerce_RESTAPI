@@ -25,6 +25,7 @@ namespace ApiEcommerce.Services.Implements
         public void Create(Category category)
         {
             _context.Categories.Add(category);
+            _context.SaveChanges();
         }   
 
         public void Delete(int id)
@@ -34,6 +35,7 @@ namespace ApiEcommerce.Services.Implements
             {
                 _context.Categories.Remove(category);
             }
+            _context.SaveChanges();
         }
 
         public Category GetById(int id)
@@ -49,6 +51,7 @@ namespace ApiEcommerce.Services.Implements
         public void Update(Category category)
         {
             _context.Categories.Update(category);
+            _context.SaveChanges();
         }
     }
 }
