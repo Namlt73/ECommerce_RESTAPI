@@ -43,6 +43,7 @@ namespace ApiEcommerce
             services.AddJwtAuthentication(Configuration);
             services.AddTransient<IConfigurationService, ConfigurationService>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
