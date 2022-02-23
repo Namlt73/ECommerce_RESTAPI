@@ -2,11 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiEcommerce.Data
 {
@@ -37,7 +32,7 @@ namespace ApiEcommerce.Data
         public DbSet<CategoryImg> CategoryImages { get; set; }
         public DbSet<FileUpload> FileUploads { get; set; }
 
-        
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -132,7 +127,7 @@ namespace ApiEcommerce.Data
                     .WithOne(oi => oi.Order)
                     .HasForeignKey(o => o.OrderId).IsRequired()
                     .OnDelete(DeleteBehavior.NoAction);
-                
+
 
                 entity.HasOne(o => o.Address).WithMany((string)null)
                     .HasForeignKey(o => o.AddressId).IsRequired()
@@ -151,7 +146,7 @@ namespace ApiEcommerce.Data
                     .OnDelete(DeleteBehavior.NoAction);
             });
 
-            
+
 
             modelBuilder.Entity<Tag>(entity =>
             {

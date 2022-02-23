@@ -1,8 +1,6 @@
 ﻿using ApiEcommerce.Entities;
 using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -26,7 +24,7 @@ namespace ApiEcommerce.Services.Interfaces
         Task<bool> IsUserInRole(User user, string roleName);
         bool IsUserLoggedIn(IIdentity user);
         Task<IdentityResult> Create(User user, string password);
-        
+
 
         Task<IdentityResult> Create(string userName,
             string firstName, string lastName,

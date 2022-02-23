@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ApiEcommerce.Services.Implements
@@ -159,7 +157,7 @@ namespace ApiEcommerce.Services.Implements
             };
             return await _userManager.CreateAsync(user, password);
         }
-        
+
 
         public async Task<bool> CheckPasswordValid(string password, User user)
         {

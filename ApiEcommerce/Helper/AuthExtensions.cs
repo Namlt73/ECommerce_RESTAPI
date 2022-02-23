@@ -6,11 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiEcommerce.Helper
 {
@@ -20,14 +17,14 @@ namespace ApiEcommerce.Helper
         {
             services.AddDbContext<ApplicationDbContext>();
 
-            services.AddIdentity<User,Role>(options =>
-            {
-                options.User.RequireUniqueEmail = true;
+            services.AddIdentity<User, Role>(options =>
+             {
+                 options.User.RequireUniqueEmail = true;
 
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireUppercase = false;
-            })
+                 options.Password.RequireNonAlphanumeric = false;
+                 options.Password.RequireDigit = false;
+                 options.Password.RequireUppercase = false;
+             })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -49,7 +46,7 @@ namespace ApiEcommerce.Helper
                     cfg.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = issuer,
-                        ValidAudience = audience, 
+                        ValidAudience = audience,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("JWT_SUPER_SECRET")),
                         ValidateIssuerSigningKey = true,
                         ValidateAudience = false,
@@ -59,6 +56,6 @@ namespace ApiEcommerce.Helper
                     };
                 });
         }
-    
+
     }
 }

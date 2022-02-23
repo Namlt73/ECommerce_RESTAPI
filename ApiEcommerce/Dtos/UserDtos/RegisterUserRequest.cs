@@ -1,11 +1,8 @@
 ﻿using ApiEcommerce.Entities;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiEcommerce.Dtos.UserDtos
 {
@@ -33,8 +30,8 @@ namespace ApiEcommerce.Dtos.UserDtos
         [Compare("Password", ErrorMessage = "The password not match.")]
         public string ConfirmPassword { get; set; }
 
-        
-        [Display(Name = "User Role")] 
+
+        [Display(Name = "User Role")]
         public List<SelectListItem> UserRoles { get; set; }
         public Role Role { get; set; }
         public string RoleName { get; set; }

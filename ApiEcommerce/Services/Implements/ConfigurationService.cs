@@ -2,9 +2,6 @@
 using ApiEcommerce.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiEcommerce.Services.Implements
 {
@@ -18,7 +15,7 @@ namespace ApiEcommerce.Services.Implements
         }
 
         public string GetAdminUserName()
-        {           
+        {
             return _configuration["Auth::Admin::Username"] ?? "admin";
         }
 
