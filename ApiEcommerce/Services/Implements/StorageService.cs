@@ -95,7 +95,7 @@ namespace ApiEcommerce.Services.Implements
 
             filePath = filePath.Replace("\\", "/");
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            using var fileStream = new FileStream(filePath, FileMode.Create);
             {
                 await file.CopyToAsync(fileStream);
 
