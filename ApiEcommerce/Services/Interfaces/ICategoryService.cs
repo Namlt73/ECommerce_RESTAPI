@@ -13,6 +13,8 @@ namespace ApiEcommerce.Services.Interfaces
         Category GetById(int id);
         int Count();
         void Create(Category category);
+        Task<Category> Create(string name, string description, List<IFormFile> files,
+            long? userId = null);
         void Update(Category category);
         void Delete(int id);
 

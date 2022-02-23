@@ -14,10 +14,12 @@ namespace ApiEcommerce.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IUserService _userService;
 
-        public CategoriesController(ICategoryService categoryService)
+        public CategoriesController(ICategoryService categoryService, IUserService userService)
         {
             _categoryService = categoryService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -26,6 +28,8 @@ namespace ApiEcommerce.Controllers
             var categories = await _categoryService.GetCategories();
             return Ok(categories);
         }
+
+        [HttpGet("{id}")]
         public  IActionResult GetById(int id)
         {
             var category = _categoryService.GetById(id);
@@ -34,15 +38,16 @@ namespace ApiEcommerce.Controllers
             return Ok(category);
         }
 
+        
         [HttpPost]
-        public IActionResult CreateCategory([FromBody] Category category)
+        public async Task<IActionResult> CreateCategory(string name, string description, List<IFormFile> images)
         {
-            if (category == null)
-                return BadRequest(ModelState);
+            // If the user POSTs the image the list<IFormFile> will be populated, if it's null instead it will be empty
+            if (images?.Count == 0)
+                images = Request.Form.Files.GetFiles("images[]").ToList();
 
-            _categoryService.Create(category);
-            
-            return StatusCode(201);
+            Category category = await _categoryService.Create(name, description, images, Convert.ToInt64(_userService.GetCurrentUserId()));
+            return Ok(category);
         }
 
         [HttpPatch("{id}")]
