@@ -1,4 +1,6 @@
-﻿using ApiEcommerce.Entities;
+﻿using ApiEcommerce.Dtos.TagDtos;
+using ApiEcommerce.Entities;
+using ApiEcommerce.Helper;
 using ApiEcommerce.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -35,7 +37,7 @@ namespace ApiEcommerce.Controllers
             if (images?.Count == 0)
                 images = Request.Form.Files.GetFiles("images[]").ToList();
             Tag tag = await _tagsService.Create(name, description, images);
-            return Ok(tag);
+            return StatusCodeAndDtoWrapper.BuildSuccess(TagDto.Build(tag), "Tag created successfully");
         }
     }
 }

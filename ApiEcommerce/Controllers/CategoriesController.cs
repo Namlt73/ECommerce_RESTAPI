@@ -1,4 +1,6 @@
-﻿using ApiEcommerce.Entities;
+﻿using ApiEcommerce.Dtos.CategoryDtos;
+using ApiEcommerce.Entities;
+using ApiEcommerce.Helper;
 using ApiEcommerce.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,7 +49,7 @@ namespace ApiEcommerce.Controllers
                 images = Request.Form.Files.GetFiles("images[]").ToList();
 
             Category category = await _categoryService.Create(name, description, images, Convert.ToInt64(_userService.GetCurrentUserId()));
-            return Ok(category);
+            return StatusCodeAndDtoWrapper.BuildSuccess(CategoryDto.Build(category), "Category created successfully");
         }
 
         [HttpPatch("{id}")]

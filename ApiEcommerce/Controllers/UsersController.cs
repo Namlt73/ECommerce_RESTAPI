@@ -1,5 +1,6 @@
 ﻿using ApiEcommerce.Dtos.UserDtos;
 using ApiEcommerce.Entities;
+using ApiEcommerce.Helper;
 using ApiEcommerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -53,20 +54,20 @@ namespace ApiEcommerce.Controllers
                     result = await _usersService.AddToRoleAsync(user, "ROLE_USER");
                     if (result.Succeeded)
                     {
-                        return StatusCode(204);
+                        return StatusCodeAndDtoWrapper.BuildSuccess("Registered successfully");
                     }
                     else
                     {
-                        return BadRequest("There's something wrong!");
+                        return StatusCodeAndDtoWrapper.BuildBadRequest(result.Errors);
                     }
                 }
                 else
                 {
-                    return BadRequest("There's something wrong!");
+                    return StatusCodeAndDtoWrapper.BuildBadRequest(result.Errors);
                 }
             }
             else
-                return BadRequest("There's something wrong!");
+                return StatusCodeAndDtoWrapper.BuildBadRequest(result.Errors);
         }
 
         [HttpPost("Login")]
@@ -83,7 +84,7 @@ namespace ApiEcommerce.Controllers
             }
             else
             {
-                return BadRequest("There's something wrong!");
+                return StatusCodeAndDtoWrapper.BuildErrorResponse("Invalid credentials");
             }
         }
 
