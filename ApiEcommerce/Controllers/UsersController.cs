@@ -73,7 +73,6 @@ namespace ApiEcommerce.Controllers
         [HttpPost("Login")]
         public async Task<object> Login([FromBody] LoginRequest loginRequest)
         {
-            // Sign in the user, don't persis cookies, don't lockout on failure
             var result = await _signInManager.PasswordSignInAsync(loginRequest.UserName, loginRequest.Password,
                 false, false);
 

@@ -14,16 +14,10 @@ namespace ApiEcommerce.Services.Interfaces
     {
         Task<List<Product>> GetAll();
         Task<Product> GetById(long id, bool onlyIfPublished = false);
-
         Task Create(Product product);
-
-        Task<Task> Update(Product product);
-
         Task<int> Delete(long id);
         Task<int> Delete(Product product);
-        Task<int> Delete(string slug);
 
-        Product GetByIdSync(long id);
         Task<Tuple<int, List<Product>>> GetBySearchTerm(string term);
         Task<Product> GetProductBySlug(string slug);
         Task<Tuple<int, List<Product>>> GetByCategory(string category);
@@ -40,7 +34,6 @@ namespace ApiEcommerce.Services.Interfaces
                         bool processTags = true, bool processCategories = true);
 
         Task<Product> Update(string slug, ProductDto dto);
-        Product DeleteProductById(long id);
 
     }
 }
