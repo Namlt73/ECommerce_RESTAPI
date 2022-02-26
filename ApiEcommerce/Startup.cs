@@ -46,6 +46,7 @@ namespace ApiEcommerce
             services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IStorageService, StorageService>();
             services.AddTransient<ITagsService, TagsService>();
+            services.AddTransient<IProductsService, ProductService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
