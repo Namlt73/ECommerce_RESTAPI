@@ -275,6 +275,11 @@ namespace ApiEcommerce.Services.Implements
             }
         }
 
+        public async Task<List<Product>> GetByIdInRetrieveNamePriceAndSlug(IEnumerable<long> productIds)
+        {
+            return await _context.Products.Where(p => productIds.Contains(p.Id)).Select(p =>
+                new Product { Id = p.Id, Name = p.Name, Slug = p.Slug, Price = p.Price, Stock = p.Stock }).ToListAsync();
+        }
 
         public async Task<Tuple<int, List<Product>>> GetBySearchTerm(string search)
         {

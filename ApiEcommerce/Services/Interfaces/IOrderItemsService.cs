@@ -13,12 +13,15 @@ namespace ApiEcommerce.Services.Interfaces
         Task<Order> Create(OrderDtoRequest formOrder, User user);
         int GetTotal(Order order);
 
-        Task<Order> GethById(long id, bool includeAddress = false, bool includeUser = false,
+        Task<Order> GetById(long id, bool includeAddress = false, bool includeUser = false,
             bool includeOrderItems = false);
 
         Task Delete(long id);
         Task<List<Order>> GetAllByUserId(long userId);
         Task<Tuple<int, List<Order>>> GetOrderByUser(long userId);
         void Create(Order order);
+        Task AddOrder(Order order);
+        Task UpdateOrder(Order order);
+        Task DeleteOrder(Order order);
     }
 }

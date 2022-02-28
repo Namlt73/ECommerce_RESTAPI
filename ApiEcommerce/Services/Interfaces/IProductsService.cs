@@ -34,6 +34,6 @@ namespace ApiEcommerce.Services.Interfaces
                         bool processTags = true, bool processCategories = true);
 
         Task<Product> Update(string slug, ProductDto dto);
-
+        Task<List<Product>> GetByIdInRetrieveNamePriceAndSlug(IEnumerable<long> productIds);
     }
 }
