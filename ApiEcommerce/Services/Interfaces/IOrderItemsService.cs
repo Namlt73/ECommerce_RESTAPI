@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ApiEcommerce.Services.Interfaces
 {
-    interface IOrderItemsService
+    public interface IOrderItemsService
     {
         Task<Tuple<int, List<Order>>> GetOrderFromUser(User user = null);
         Task<Order> Create(OrderDtoRequest formOrder, User user);
