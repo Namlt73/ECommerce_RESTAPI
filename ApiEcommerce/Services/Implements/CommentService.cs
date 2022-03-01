@@ -66,6 +66,41 @@ namespace ApiEcommerce.Services.Implements
                 return await _context.Comments.FindAsync(id);
         }
 
+        public async Task<Tuple<int, List<Comment>>> GetCommentsByProduct(string slug)
+        {
+            IQueryable<Comment> queryable = _context.Comments.Where(c => c.Product.Slug.Equals(slug))
+                .Include(c => c.Product)
+                .Include(c => c.User)
+                .Select(c => new Comment
+                {
+                    Id = c.Id,
+                    Rating = c.Rating,
+                    Content = c.Content,
+
+                    ProductId = c.ProductId,
+                    Product = new Product
+                    {
+                        Id = c.ProductId,
+                        Name = c.Product.Name,
+                        Slug = c.Product.Slug
+                    },
+                    User = new User
+                    {
+                        Id = c.UserId,
+                        UserName = c.User.UserName
+                    },
+                    CreatedAt = c.CreatedAt,
+                    UpdatedAt = c.UpdatedAt,
+                });
+
+            var count = await queryable.CountAsync();
+
+
+            var comments = await queryable.ToListAsync();
+
+            return Tuple.Create(count, comments);
+        }
+
         public async Task<int> UpdateComment(Comment comment, CommentDto commentDto)
         {
             comment.Content = _htmlEncoder.Encode(commentDto.Content);
