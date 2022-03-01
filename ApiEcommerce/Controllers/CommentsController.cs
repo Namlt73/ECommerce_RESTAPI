@@ -42,7 +42,7 @@ namespace ApiEcommerce.Controllers
 
         [HttpGet("products/{slug}/comments/{comment_id}")]
         [HttpGet("/comments/{comment_id}")]
-        public async Task<IActionResult> GetDetails(string slug, long commentId, CommentDto model)
+        public async Task<IActionResult> GetDetails(long commentId)
         {
             Comment comment = await _commentService.GetCommentById(commentId);
             return StatusCodeAndDtoWrapper.BuildSuccess(CommentDetailsDto.Build(comment));
@@ -66,7 +66,7 @@ namespace ApiEcommerce.Controllers
         [Authorize]
         [Route("comments/{slug}/comments/{id}")]
         [Route("comments/{id}")]
-        public async Task<IActionResult> UpdateComment([FromBody] CommentDto model, [FromRoute] long id, long slug)
+        public async Task<IActionResult> UpdateComment([FromBody] CommentDto model, [FromRoute] long id)
         {
             Comment comment = await _commentService.GetCommentById(id, includeUser: true);
             if (comment == null)
@@ -92,7 +92,7 @@ namespace ApiEcommerce.Controllers
         [Authorize]
         [Route("comments/{slug}/comments/{id}")]
         [Route("comments/{id}")]
-        public async Task<IActionResult> Delete([FromRoute] long id, string slug)
+        public async Task<IActionResult> Delete([FromRoute] long id)
         {
             Comment comment = await _commentService.GetCommentById(id);
             if (comment == null)
