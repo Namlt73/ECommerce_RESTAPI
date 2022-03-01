@@ -13,14 +13,15 @@ namespace ApiEcommerce.Services.Interfaces
     public interface IProductsService
     {
         Task<List<Product>> GetAll();
+        Task<Tuple<int, List<Product>>> GetProductsPage(int page = 1, int pageSize = 10);        
         Task<Product> GetById(long id, bool onlyIfPublished = false);
         Task Create(Product product);
         Task<int> Delete(long id);
         Task<int> Delete(Product product);
 
-        Task<Tuple<int, List<Product>>> GetBySearchTerm(string term);
+        Task<Tuple<int, List<Product>>> GetBySearchTerm(string term, int page, int pageSize);
         Task<Product> GetProductBySlug(string slug);
-        Task<Tuple<int, List<Product>>> GetByCategory(string category);
+        Task<Tuple<int, List<Product>>> GetByCategory(string category, int pageSize, int page);
         Task SaveProduct(Product product);
 
         Task<Product> Create(string name, string description,

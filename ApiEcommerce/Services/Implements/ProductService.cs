@@ -246,7 +246,7 @@ namespace ApiEcommerce.Services.Implements
             return await _context.Products.ToListAsync();
         }
 
-        public async Task<Tuple<int, List<Product>>> GetByCategory(string category)
+        public async Task<Tuple<int, List<Product>>> GetByCategory(string category, int pageSize, int page)
         {
             IQueryable<Product> queryable = _context.Products.Include(a => a.ProductCategories)
                 .Include(p => p.ProductImages)
@@ -254,10 +254,12 @@ namespace ApiEcommerce.Services.Implements
                     p.Category.Name.Contains(category, StringComparison.OrdinalIgnoreCase)));
             var count = queryable.Count();
 
-            List<Product> products = await queryable.ToListAsync();
+            List<Product> products = await queryable.Skip((page - 1) * pageSize)
+                .Take(pageSize).ToListAsync();
 
             return Tuple.Create(count, products);
         }
+       
 
         public async Task<Product> GetById(long id, bool onlyIfPublished = false)
         {
@@ -281,7 +283,7 @@ namespace ApiEcommerce.Services.Implements
                 new Product { Id = p.Id, Name = p.Name, Slug = p.Slug, Price = p.Price, Stock = p.Stock }).ToListAsync();
         }
 
-        public async Task<Tuple<int, List<Product>>> GetBySearchTerm(string search)
+        public async Task<Tuple<int, List<Product>>> GetBySearchTerm(string search, int page, int pageSize)
         {
             var queryable = _context.Products.Where(a =>
                     a.Description.Contains(search) ||
@@ -291,6 +293,7 @@ namespace ApiEcommerce.Services.Implements
 
             var products = await queryable.OrderByDescending(a => a.PublishAt)
                 .ThenByDescending(a => a.UpdatedAt)
+                .Skip((page - 1) * pageSize).Take(pageSize)
                 .Include(a => a.Comments)
                 .Include(a => a.ProductCategories)
                 .ThenInclude(ac => ac.Category).ToListAsync();
@@ -299,10 +302,29 @@ namespace ApiEcommerce.Services.Implements
             return Tuple.Create(count, products);
         }
 
+        
+
         public async Task<Product> GetProductBySlug(string slug)
         {
             return await _context.Products
                 .FirstOrDefaultAsync(p => p.Slug.Equals(slug, StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        public async Task<Tuple<int, List<Product>>> GetProductsPage(int page = 1, int pageSize = 10)
+        {
+            var queryable = _context.Products;
+            var count = await queryable.CountAsync();
+            var results = await queryable.Skip((page - 1) * pageSize)
+                .Take(pageSize) 
+                .Select(p => new { Product = p, CommentsCount = p.Comments.Count, Images = p.ProductImages })
+                .ToListAsync();
+
+            foreach (var product in results)
+            {
+                product.Product.CommentsCount = product.CommentsCount;
+            }
+
+            return await Task.FromResult(Tuple.Create(count, results.Select(a => a.Product).ToList()));
         }
 
         public async Task SaveProduct(Product product)

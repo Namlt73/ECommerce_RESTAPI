@@ -36,20 +36,23 @@ namespace ApiEcommerce.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var products = await _productsService.GetAll();
+            var products = await _productsService.GetProductsPage(page, pageSize);
+            var basePath = Request.Path;
 
-            return Ok(products);
+            return StatusCodeAndDtoWrapper.BuildSuccess(ListProductsDto.Build(products.Item2, basePath,
+                currentPage: page, pageSize: pageSize, totalItemCount: products.Item1));
         }
 
         [HttpGet("by_cat/{id}")]
         //[Route("/by_category/{category}")]
-        public async Task<IActionResult> GetByCategory([FromRoute] string category)
+        public async Task<IActionResult> GetByCategory([FromRoute] string category, int page = 1, int pageSize = 6)
         {
-            Tuple<int, List<Product>> products = await _productsService.GetByCategory(category);
+            Tuple<int, List<Product>> products = await _productsService.GetByCategory(category, pageSize, page);
 
-            return Ok(products);
+            return StatusCodeAndDtoWrapper.BuildSuccess(ListProductsDto.Build(products.Item2,
+               "/by_category/{category}", page, pageSize, products.Item1));
         }
 
         [HttpGet("{slug}")]
@@ -80,7 +83,7 @@ namespace ApiEcommerce.Controllers
         {
             if (!(await _usersService.IsAdmin()))
                 return StatusCodeAndDtoWrapper.BuildUnauthorized("Only admin user can create prodcuts");
-         
+
             if (images?.Count == 0)
                 images = Request.Form.Files.GetFiles("images[]").ToList();
 
