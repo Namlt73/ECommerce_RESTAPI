@@ -22,21 +22,23 @@ namespace ApiEcommerce.Services.Implements
             _storageService = storageService;
         }
 
-        public async Task<Tuple<int, List<Tag>>> GetTags()
+        public async Task<Tuple<int, List<Tag>>> GetTags(int page, int pageSize)
         {
             var queryable = _context.Tags;
             var count = await queryable.CountAsync();
-            var results = await queryable.ToListAsync();
+            var results = await queryable
+                .Include(t => t.TagImgs).Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
 
             return await Task.FromResult(Tuple.Create(count, results));
         }
 
-        public async Task<Tuple<int, List<Tag>>> GetTagsWithImages()
+        public async Task<Tuple<int, List<Tag>>> GetTagsWithImages(int page, int pageSize)
         {
             var queryable = _context.Tags.Include(t => t.TagImgs)
                 .Where(t => t.TagImgs != null && t.TagImgs.Count > 0);
             var count = await queryable.CountAsync();
-            var results = await queryable.ToListAsync();
+            var results = await queryable.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return await Task.FromResult(Tuple.Create(count, results));
         }

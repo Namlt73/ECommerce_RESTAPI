@@ -74,9 +74,14 @@ namespace ApiEcommerce.Services.Implements
             return _context.Categories.SingleOrDefault(c => c.Id == id);
         }
 
-        public async Task<IEnumerable<Category>> GetCategories()
+        public async Task<Tuple<int, List<Category>>> GetCategories(int page, int pageSize)
         {
-            return await _context.Categories.ToListAsync();
+            var queryable = _context.Categories;
+            var count = await queryable.CountAsync();
+            var results = await queryable.Include(t => t.CategoryImages).Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
+
+            return await Task.FromResult(Tuple.Create(count, results));
         }
 
         public void Update(Category category)

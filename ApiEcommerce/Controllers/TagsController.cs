@@ -24,10 +24,13 @@ namespace ApiEcommerce.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetTags()
+        public async Task<IActionResult> GetTags([FromQuery] int page = 1, [FromQuery] int pageSize = 6)
         {
-            var tags = await _tagsService.GetTags();
-            return Ok(tags);
+            var tags = await _tagsService.GetTags(page, pageSize);
+            var basePath = Request.Path;
+
+            return StatusCodeAndDtoWrapper.BuildSuccess(ListTagsDto.Build(tags.Item2, basePath,
+                currentPage: page, pageSize: pageSize, totalItemCount: tags.Item1));
         }
 
         [HttpPost]

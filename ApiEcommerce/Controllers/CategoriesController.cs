@@ -25,10 +25,13 @@ namespace ApiEcommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories([FromQuery] int page = 1, [FromQuery] int pageSize = 6)
         {
-            var categories = await _categoryService.GetCategories();
-            return Ok(categories);
+            var categories = await _categoryService.GetCategories(page, pageSize);
+            var basePath = Request.Path;
+
+            return StatusCodeAndDtoWrapper.BuildSuccess(ListCategoriesDto.Build(categories.Item2, basePath,
+                currentPage: page, pageSize: pageSize, totalItemCount: categories.Item1));
         }
 
         [HttpGet("{id}")]
