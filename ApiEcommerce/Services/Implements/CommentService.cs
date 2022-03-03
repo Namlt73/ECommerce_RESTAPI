@@ -66,7 +66,7 @@ namespace ApiEcommerce.Services.Implements
                 return await _context.Comments.FindAsync(id);
         }
 
-        public async Task<Tuple<int, List<Comment>>> GetCommentsByProduct(string slug)
+        public async Task<Tuple<int, List<Comment>>> GetCommentsByProduct(string slug, int page = 1, int pageSize = 10)
         {
             IQueryable<Comment> queryable = _context.Comments.Where(c => c.Product.Slug.Equals(slug))
                 .Include(c => c.Product)
@@ -96,7 +96,7 @@ namespace ApiEcommerce.Services.Implements
             var count = await queryable.CountAsync();
 
 
-            var comments = await queryable.ToListAsync();
+            var comments = await queryable.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             return Tuple.Create(count, comments);
         }

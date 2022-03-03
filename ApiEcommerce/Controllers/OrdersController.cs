@@ -28,12 +28,13 @@ namespace ApiEcommerce.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetOrderOfCurrentUser()
+        public async Task<IActionResult> GetOrderOfCurrentUser([FromQuery] int page = 1, [FromQuery] int pageSize = 5)
         {
             long userId = Convert.ToInt64(_userService.GetCurrentUserId());
             Tuple<int, List<Order>> orders = await _orderItemsService.GetOrderByUser(userId);
 
-            return Ok(orders);
+            return StatusCodeAndDtoWrapper.BuildSuccess(ListOrdersDto.Build(orders.Item2, Request.Path,
+                currentPage: page, pageSize: pageSize, totalItemCount: orders.Item1));
         }
 
         [HttpGet("{id}")]

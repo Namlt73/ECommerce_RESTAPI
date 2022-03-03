@@ -32,11 +32,14 @@ namespace ApiEcommerce.Controllers
         }
 
         [HttpGet("products/{slug}/comments")]
-        public async Task<IActionResult> GetComments(string slug)
+        public async Task<IActionResult> GetComments(string slug, [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 5)
         {
             Tuple<int, List<Comment>> comments = await _commentService.GetCommentsByProduct(slug);
 
-            return Ok(comments);
+            return StatusCodeAndDtoWrapper.BuildSuccess(
+                ListCommentsDto.Build(comments.Item2, Request.Path, page, pageSize, comments.Item1)
+            );
         }
 
 

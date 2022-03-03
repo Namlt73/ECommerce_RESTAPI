@@ -9,7 +9,7 @@ namespace ApiEcommerce.Services.Interfaces
 {
     public interface IOrderItemsService
     {
-        Task<Tuple<int, List<Order>>> GetOrderFromUser(User user = null);
+        Task<Tuple<int, List<Order>>> GetOrderFromUser(User user = null, int page = 1, int pageSize = 6);
         Task<Order> Create(OrderDtoRequest formOrder, User user);
         int GetTotal(Order order);
 
@@ -18,7 +18,7 @@ namespace ApiEcommerce.Services.Interfaces
 
         Task Delete(long id);
         Task<List<Order>> GetAllByUserId(long userId);
-        Task<Tuple<int, List<Order>>> GetOrderByUser(long userId);
+        Task<Tuple<int, List<Order>>> GetOrderByUser(long userId, int page = 1, int pageSize = 6);
         void Create(Order order);
         Task AddOrder(Order order);
         Task UpdateOrder(Order order);

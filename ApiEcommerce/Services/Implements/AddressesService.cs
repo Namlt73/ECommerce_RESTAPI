@@ -17,10 +17,12 @@ namespace ApiEcommerce.Services.Implements
         {
             _context = context;
         }
-        private static async Task<Tuple<int, List<Address>>> GetAddressFromQueryable(IQueryable<Address> queryable)
+        private static async Task<Tuple<int, List<Address>>> GetAddressFromQueryable(IQueryable<Address> queryable, 
+            int page, int pageSize)
         {
             var count = await queryable.CountAsync();
             var addresses = await queryable
+                .Skip((page - 1) * pageSize).Take(pageSize)
                 .Include(a => a.User)
                 .ToListAsync();
 
@@ -45,10 +47,10 @@ namespace ApiEcommerce.Services.Implements
             return address;
         }
 
-        public async Task<Tuple<int, List<Address>>> GetAddress()
+        public async Task<Tuple<int, List<Address>>> GetAddress(int page = 1, int pageSize = 6)
         {
             var queryable = _context.Addresses;
-            return await GetAddressFromQueryable(queryable);
+            return await GetAddressFromQueryable(queryable, page, pageSize);
         }
 
         public async Task<Address> GetAddressById(long? id)
@@ -56,12 +58,12 @@ namespace ApiEcommerce.Services.Implements
             return await _context.Addresses.FindAsync(id);
         }
 
-        public async Task<Tuple<int, List<Address>>> GetAddressByUser(User user)
+        public async Task<Tuple<int, List<Address>>> GetAddressByUser(User user, int page, int pageSize)
         {
             var count = _context.Addresses.Count(a => a.User.Id == user.Id);
             var queryable = _context.Addresses.Where(a => a.User == user)
                 .Include(a => a.User);
-            return await GetAddressFromQueryable(queryable);
+            return await GetAddressFromQueryable(queryable, page, pageSize);
         }
     }
 }

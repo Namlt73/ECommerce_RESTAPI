@@ -13,6 +13,6 @@ namespace ApiEcommerce.Services.Interfaces
             long userId);
         Task<int> DeleteComment(long id);
         Task<int> UpdateComment(Comment comment, CommentDto commentDto);
-        Task<Tuple<int, List<Comment>>> GetCommentsByProduct(string slug);
+        Task<Tuple<int, List<Comment>>> GetCommentsByProduct(string slug, int page = 1, int pageSize = 10);
     }
 }

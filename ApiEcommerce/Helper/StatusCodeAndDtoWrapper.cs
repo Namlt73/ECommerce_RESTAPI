@@ -47,6 +47,11 @@ namespace ApiEcommerce.Helper
             return new StatusCodeAndDtoWrapper(errorRes, 400);
         }
 
+        internal static IActionResult BuildSuccess(object p)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public static IActionResult BuildSuccess(ApplicationResponse dto)
         {
             return new StatusCodeAndDtoWrapper(dto, 200);

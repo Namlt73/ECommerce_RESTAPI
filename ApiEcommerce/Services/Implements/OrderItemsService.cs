@@ -130,7 +130,7 @@ namespace ApiEcommerce.Services.Implements
             return await queryable.FirstAsync();
         }
 
-        public async Task<Tuple<int, List<Order>>> GetOrderByUser(long userId)
+        public async Task<Tuple<int, List<Order>>> GetOrderByUser(long userId, int page = 1, int pageSize = 5)
         {
             IQueryable<Order> queryable = _context.Orders
                 .Include(o => o.OrderItems)
@@ -140,12 +140,15 @@ namespace ApiEcommerce.Services.Implements
 
 
             var count = queryable.Count();
-            List<Order> orders = await queryable.ToListAsync();
+            List<Order> orders = await queryable
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
 
             return Tuple.Create(count, orders);
         }
 
-        public async Task<Tuple<int, List<Order>>> GetOrderFromUser(User user = null)
+        public async Task<Tuple<int, List<Order>>> GetOrderFromUser(User user = null, 
+            int page = 1, int pageSize = 6)
         {
             IQueryable<Order> queryable = _context.Orders.Include(o => o.OrderItems).ThenInclude(p => p.Product);
             if (user != null)
@@ -154,7 +157,9 @@ namespace ApiEcommerce.Services.Implements
             }
 
             var count = queryable.Count();
-            List<Order> orders = await queryable.ToListAsync();
+            List<Order> orders = await queryable
+                .Skip((page - 1) * pageSize).Take(pageSize)
+                .ToListAsync();
             return Tuple.Create(count, orders);
         }
 
