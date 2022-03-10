@@ -28,8 +28,13 @@ namespace ApiEcommerce.Controllers
             _signInManager = signInManager;
         }
 
-       
 
+        [HttpGet("Authorized")]
+        [Authorize]
+        public IActionResult Get3()
+        {
+            return StatusCode(200, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        }
 
         [HttpPost("Register")]
         [AllowAnonymous]

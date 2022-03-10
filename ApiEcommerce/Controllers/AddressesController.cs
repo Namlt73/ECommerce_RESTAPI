@@ -1,6 +1,7 @@
 ﻿using ApiEcommerce.Dtos.AddressDtos;
 using ApiEcommerce.Helper;
 using ApiEcommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,6 +13,7 @@ namespace ApiEcommerce.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AddressesController : ControllerBase
     {
         private readonly IAddressesService _addressesService;

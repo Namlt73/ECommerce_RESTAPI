@@ -53,6 +53,7 @@ namespace ApiEcommerce.Controllers
 
         
         [HttpPost("products/{slug}/comments")]
+        [Authorize]
         public async Task<IActionResult> CreateComment(string slug, [FromBody] CommentDto model)
         {
             if (!ModelState.IsValid)

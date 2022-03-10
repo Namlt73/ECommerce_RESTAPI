@@ -35,7 +35,7 @@ namespace ApiEcommerce.Controllers
             _configurationService = configurationService;
         }
 
-        [HttpGet()]
+        [HttpGet("")]
         public async Task<IActionResult> Index([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
             var products = await _productsService.GetProductsPage(page, pageSize);
