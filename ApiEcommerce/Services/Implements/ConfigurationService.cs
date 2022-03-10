@@ -41,7 +41,7 @@ namespace ApiEcommerce.Services.Implements
 
         public int GetDefaultPageSize()
         {
-            return Convert.ToInt32(_configuration["Content::Page::Size"] ?? "5");
+            return Convert.ToInt32(_configuration["Content::Page::Size"] ?? "6");
         }
 
         public string GetManageProductPolicyName()
