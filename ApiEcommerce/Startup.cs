@@ -51,6 +51,10 @@ namespace ApiEcommerce
             services.AddTransient<IOrderItemsService, OrderItemsService>();
             services.AddTransient<ICommentService, CommentService>();
 
+            services.AddJwtAuthentication(Configuration);
+            services.AddAppAuthorization(Configuration);
+            services.AddIdentityAuthentication(Configuration);
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -69,6 +73,9 @@ namespace ApiEcommerce
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
+            app.UseStaticFiles();
+            app.UseCors("AllowAll");
 
             app.UseRouting();
 

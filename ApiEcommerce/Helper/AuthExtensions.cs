@@ -1,6 +1,10 @@
 ﻿using ApiEcommerce.Data;
 using ApiEcommerce.Entities;
+using ApiEcommerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +58,88 @@ namespace ApiEcommerce.Helper
                         ValidateLifetime = false,
                         ClockSkew = TimeSpan.Zero // remove delay of token when expire
                     };
+                });
+        }
+
+        public static void AddAppAuthorization(this IServiceCollection services, IConfiguration configuration)
+        {
+            IConfigurationService configurationService =
+                services.BuildServiceProvider().GetRequiredService<IConfigurationService>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(configurationService.GetManageProductPolicyName(), policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.AddRequirements(
+                        new ResourceAuthorizationHandler.AllowedToManageProductRequirement(configurationService
+                            .GetWhoIsAllowedToManageProducts()));
+                });
+
+
+                options.AddPolicy(configurationService.GetCreateCommentPolicyName(), policy =>
+                {
+                    policy.Requirements.Add(
+                        new ResourceAuthorizationHandler.AllowedToCreateCommentRequirement(configurationService
+                            .GetWhoIsAllowedToCreateComments()));
+                });
+
+
+                options.AddPolicy(configurationService.GetUpdateCommentPolicyName(), policy =>
+                {
+                    policy.Requirements.Add(
+                        new ResourceAuthorizationHandler.AllowedToUpdateCommentRequirement(configurationService
+                            .GetWhoIsAllowedToUpdateComments()));
+                });
+
+
+                options.AddPolicy(configurationService.GetDeleteCommentPolicyName(), policy =>
+                {
+                    policy.Requirements.Add(
+                        new ResourceAuthorizationHandler.AllowedToDeleteCommentRequirement(configurationService
+                            .GetWhoIsAllowedToDeleteComments()));
+                });
+            });
+
+            // CORS
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+        }
+
+
+        public static void AddIdentityAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireUppercase = false;
+            })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/users/login";
+                    options.LogoutPath = "/logout";
                 });
         }
 
